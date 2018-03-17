@@ -15,7 +15,9 @@ type myDownloader struct {
 	httpClient http.Client
 }
 
-func New(mid module.MID, client *http.Client, scoreCalculator module.CalculateScore) (module.Downloader, error) {
+func New(mid module.MID,
+	client *http.Client,
+	scoreCalculator module.CalculateScore) (module.Downloader, error) {
 	moduleBase, err := stub.NewModuleInternal(mid, scoreCalculator)
 	if err != nil {
 		return nil, genError(err.Error())

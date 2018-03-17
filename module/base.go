@@ -42,7 +42,7 @@ type Downloader interface {
 	Download(req *Request) (*Response, error)
 }
 
-type ParseResponse func(httpResp *http.Response, respDepth uint32) ([]Data, error)
+type ParseResponse func(httpResp *http.Response, respDepth uint32) ([]Data, []error)
 
 type Analyzer interface {
 	Module
