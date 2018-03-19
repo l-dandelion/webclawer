@@ -19,7 +19,7 @@ type SummaryStruct struct {
 	Accepted  uint64      `json:"accepted"`
 	Completed uint64      `json:"completed"`
 	Handling  uint64      `json:"handling"`
-	Extra     interface{} `json:"extra"`
+	Extra     interface{} `json:"extra,omitempty"`
 }
 
 //组件的基础接口类型

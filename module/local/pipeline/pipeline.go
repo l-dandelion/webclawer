@@ -86,7 +86,7 @@ func (pipeline *myPipeline) SetFailFast(failFast bool) {
 }
 
 type extraSummaryStruct struct {
-	FailFast        bool `json:fail_fast`
+	FailFast        bool `json:"fail_fast"`
 	ProcessorNumber int  `json:"processor_number"`
 }
 
