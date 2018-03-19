@@ -18,7 +18,7 @@ var logger = log.DLogger()
 
 type Scheduler interface {
 	Init(RequestArgs, DataArgs, ModuleArgs) error
-	Start(firstHTTPReq *http.Request) error
+	Start(initialHTTPReqs []*http.Request) error
 	Stop() error
 	Status() Status
 	ErrorChan() <-chan error
@@ -108,7 +108,7 @@ func (sched *myScheduler) Init(
 	return
 }
 
-func (sched *myScheduler) Start(firstHTTPReq *http.Request) (err error) {
+func (sched *myScheduler) Start(initialHTTPReqs []*http.Request) (err error) {
 	defer func() {
 		if p := recover(); p != nil {
 			errMsg := fmt.Sprintf("Fatal Scheduler error: %s", p)
@@ -132,22 +132,28 @@ func (sched *myScheduler) Start(firstHTTPReq *http.Request) (err error) {
 		}
 		sched.statusLock.Unlock()
 	}()
-	logger.Info("Check first HTTP request...")
-	if firstHTTPReq == nil {
-		err = genParameterError("nil first HTTP request")
+	logger.Info("Check initial HTTP request list...")
+	if initialHTTPReqs == nil {
+		err = genParameterError("nil initial HTTP request list")
 		return
 	}
-	logger.Info("First HTTP request is valid.")
+	logger.Info("Initial HTTP request list is valid.")
 
 	logger.Info("Get the primary domain...")
-	logger.Infof("-- Host: %s", firstHTTPReq.Host)
-	var primaryDomain string
-	primaryDomain, err = getPrimaryDomain(firstHTTPReq.Host)
-	if err != nil {
-		return
+
+	for _, httpReq := range initialHTTPReqs {
+		logger.Infof("-- Host: %s", httpReq.Host)
+		var primaryDomain string
+		primaryDomain, err = getPrimaryDomain(httpReq.Host)
+		if err != nil {
+			return
+		}
+		ok, _ := sched.acceptedDomainMap.Put(primaryDomain, struct{}{})
+		if ok {
+			logger.Infof("-- Primary domain: %s", primaryDomain)
+		}
 	}
-	logger.Infof("-- Primary domain: %s", primaryDomain)
-	sched.acceptedDomainMap.Put(primaryDomain, struct{}{})
+
 	if err = sched.checkBufferForStart(); err != nil {
 		return
 	}
@@ -155,7 +161,9 @@ func (sched *myScheduler) Start(firstHTTPReq *http.Request) (err error) {
 	sched.analyze()
 	sched.pick()
 	logger.Info("The Scheduler has been started.")
-	sched.sendReq(module.NewRequest(firstHTTPReq, 0))
+	for _, httpReq := range initialHTTPReqs {
+		sched.sendReq(module.NewRequest(httpReq, 0))
+	}
 	return nil
 }
 

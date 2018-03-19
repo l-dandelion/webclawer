@@ -131,7 +131,7 @@ func TestSchedStart(t *testing.T) {
 		t.Fatalf("An error occurs when creating a HTTP request: %s (url: %s)",
 			err, url)
 	}
-	err = sched.Start(firstHTTPReq)
+	err = sched.Start([]*http.Request{firstHTTPReq})
 	if err != nil {
 		t.Fatalf("An error occurs when starting scheduler: %s",
 			err)
@@ -144,7 +144,7 @@ func TestSchedStart(t *testing.T) {
 	}
 	sched.Stop()
 	firstHTTPReq.Host = ""
-	err = sched.Start(firstHTTPReq)
+	err = sched.Start([]*http.Request{firstHTTPReq})
 	if err == nil {
 		t.Fatalf("No error when start scheduler with empty HTTP host!")
 	}
@@ -169,7 +169,7 @@ func TestSchedStop(t *testing.T) {
 		t.Fatalf("An error occurs when creating a HTTP request: %s (url: %s)",
 			err, url)
 	}
-	err = sched.Start(firstHTTPReq)
+	err = sched.Start([]*http.Request{firstHTTPReq})
 	if err != nil {
 		t.Fatalf("An error occurs when starting scheduler: %s", err)
 	}
@@ -192,7 +192,7 @@ func TestSchedStatus(t *testing.T) {
 			err, url)
 	}
 	// 测试未初始化状态下的启动。
-	if err = sched.Start(firstHTTPReq); err == nil {
+	if err = sched.Start([]*http.Request{firstHTTPReq}); err == nil {
 		t.Fatal("No error when start scheduler before initialize!")
 	}
 	// 测试未初始化状态下的停止。
@@ -212,11 +212,11 @@ func TestSchedStatus(t *testing.T) {
 		t.Fatal("No error when stop scheduler after initialize!")
 	}
 	// 测试已初始化状态下的启动。
-	if err = sched.Start(firstHTTPReq); err != nil {
+	if err = sched.Start([]*http.Request{firstHTTPReq}); err != nil {
 		t.Fatalf("An error occurs when starting scheduler after initialize: %s", err)
 	}
 	// 测试重复启动。
-	if err = sched.Start(firstHTTPReq); err == nil {
+	if err = sched.Start([]*http.Request{firstHTTPReq}); err == nil {
 		t.Fatal("No error when repeatedly start scheduler!")
 	}
 	// 测试已启动状态下的初始化。
@@ -256,7 +256,7 @@ func TestSchedSimple(t *testing.T) {
 		t.Fatalf("An error occurs when initializing scheduler: %s",
 			err)
 	}
-	err = sched.Start(firstHTTPReq)
+	err = sched.Start([]*http.Request{firstHTTPReq})
 	if err != nil {
 		t.Fatalf("An error occurs when starting scheduler: %s",
 			err)
@@ -334,7 +334,7 @@ func TestSchedSendReq(t *testing.T) {
 		t.Fatalf("An error occurs when creating a HTTP request: %s (url: %s)",
 			err, url)
 	}
-	err = sched.Start(firstHTTPReq)
+	err = sched.Start([]*http.Request{firstHTTPReq})
 	if err != nil {
 		t.Fatalf("An error occurs when starting scheduler: %s",
 			err)
