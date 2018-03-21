@@ -1,8 +1,6 @@
 package spider
 
 import (
-	"net/http"
-
 	"github.com/l-dandelion/webcrawler/module"
 	"github.com/l-dandelion/webcrawler/scheduler"
 	lib "github.com/l-dandelion/webcrawler/spider/internal"
@@ -12,7 +10,7 @@ type Spider struct {
 	Name                  string
 	MaxDepth              uint32
 	AcceptedPrimaryDomain []string
-	InitialHTTPReq        []*http.Request
+	InitialHTTPReq        []*module.Request
 	RespParsers           []module.ParseResponse
 	ItemProcessors        []module.ProcessItem
 	ReqBufferCap          uint32
@@ -32,7 +30,7 @@ func NewSpider(
 	name string,
 	maxDepth uint32,
 	acceptedPrimaryDomain []string,
-	initialHTTPReq []*http.Request,
+	initialHTTPReq []*module.Request,
 	RespParsers []module.ParseResponse,
 	ItemProcessors []module.ProcessItem,
 	DownloaderNumber, AnalyzerNumber, PipelineNumber uint8) *Spider {

@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"net/http"
 	"strings"
 	"sync"
 
@@ -18,7 +17,7 @@ var logger = log.DLogger()
 
 type Scheduler interface {
 	Init(RequestArgs, DataArgs, ModuleArgs) error
-	Start(initialHTTPReqs []*http.Request) error
+	Start(initialReqs []*module.Request) error
 	Stop() error
 	Status() Status
 	ErrorChan() <-chan error
@@ -108,7 +107,7 @@ func (sched *myScheduler) Init(
 	return
 }
 
-func (sched *myScheduler) Start(initialHTTPReqs []*http.Request) (err error) {
+func (sched *myScheduler) Start(initialReqs []*module.Request) (err error) {
 	defer func() {
 		if p := recover(); p != nil {
 			errMsg := fmt.Sprintf("Fatal Scheduler error: %s", p)
@@ -133,7 +132,7 @@ func (sched *myScheduler) Start(initialHTTPReqs []*http.Request) (err error) {
 		sched.statusLock.Unlock()
 	}()
 	logger.Info("Check initial HTTP request list...")
-	if initialHTTPReqs == nil {
+	if initialReqs == nil {
 		err = genParameterError("nil initial HTTP request list")
 		return
 	}
@@ -141,7 +140,8 @@ func (sched *myScheduler) Start(initialHTTPReqs []*http.Request) (err error) {
 
 	logger.Info("Get the primary domain...")
 
-	for _, httpReq := range initialHTTPReqs {
+	for _, req := range initialReqs {
+		httpReq := req.HTTPReq()
 		logger.Infof("-- Host: %s", httpReq.Host)
 		var primaryDomain string
 		primaryDomain, err = getPrimaryDomain(httpReq.Host)
@@ -161,8 +161,8 @@ func (sched *myScheduler) Start(initialHTTPReqs []*http.Request) (err error) {
 	sched.analyze()
 	sched.pick()
 	logger.Info("The Scheduler has been started.")
-	for _, httpReq := range initialHTTPReqs {
-		sched.sendReq(module.NewRequest(httpReq))
+	for _, req := range initialReqs {
+		sched.sendReq(req)
 	}
 	return nil
 }
