@@ -4,7 +4,10 @@ import (
 	"github.com/l-dandelion/webcrawler/module"
 	"github.com/l-dandelion/webcrawler/scheduler"
 	lib "github.com/l-dandelion/webcrawler/spider/internal"
+	"gopcp.v2/helper/log"
 )
+
+var logger = log.DLogger()
 
 type Spider struct {
 	Name                  string

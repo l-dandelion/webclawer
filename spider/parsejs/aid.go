@@ -4,6 +4,7 @@ import (
 	"errors"
 	"gopcp.v2/helper/log"
 	"net/http"
+	"net/url"
 
 	"github.com/l-dandelion/webcrawler/module"
 )
@@ -37,4 +38,8 @@ func (aid *Aid) NewItem(extras ...map[string]interface{}) module.Item {
 
 func (aid *Aid) NewError(errMsg string) error {
 	return errors.New(errMsg)
+}
+
+func (aid *Aid) ParseURL(href string) (*url.URL, error) {
+	return url.Parse(href)
 }

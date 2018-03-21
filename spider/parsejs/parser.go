@@ -1,11 +1,13 @@
 package parsejs
 
 import (
+	"fmt"
 	"github.com/l-dandelion/webcrawler/module"
 	"github.com/robertkrimen/otto"
 )
 
 func GetParserFromJS(jsCode string) module.ParseResponse {
+	fmt.Println(jsCode)
 	return func(resp *module.Response) ([]module.Data, []error) {
 		dataList := NewDataList()
 		errorList := NewErrorList()

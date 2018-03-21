@@ -11,17 +11,17 @@ var xmlStr = `
 
     <Init>
     <Script param="aid, dataList">
-        url = "http://codeforces.com/api/user.info?handles=DmitriyH;Fefer_Ivan";
+        url = "http://zhihu.sogou.com/zhihu?query=golang+logo";
         method = "GET";
         req = aid.NewRequest(url, method);
         dataList.Push(req);
     </Script>
     </Init>
 
-    <MaxDepth>0</MaxDepth>
+    <MaxDepth>1</MaxDepth>
 
     <AcceptedPrimaryDomain>
-    <PrimaryDomain>codeforce.com</PrimaryDomain>
+    <PrimaryDomain>zhihu.com</PrimaryDomain>
     </AcceptedPrimaryDomain>
     
     <DataArgs>
@@ -53,16 +53,35 @@ var xmlStr = `
     </ModuleArgs>
 
     <ResponseParser>
-        <Script param="aid, dataList, errorList, resp">
-            val = resp.GetText();
-
-            function bin2String(array) {
-              return String.fromCharCode.apply(String, array);
+        <Script param="aid,dataList,errorList,resp">
+            var query = resp.GetDom();
+            dom = query[0];
+            var adom = dom.Find("a");
+            var alen = adom.Length();
+            var i = 0;
+            for(i = 0; i != alen; i ++){
+                var nowhref = adom.Slice(i,i+1).Attr("href");
+                href = nowhref[0];
+                if (!nowhref[1] || href == "" || href == "#" || href == "/") {
+                    continue;
+                }
+                trimhref = nowhref[0].trim();
+                lowhref = trimhref.toLowerCase();
+                var fdStart = lowhref.indexOf("javascript")
+                if(fdStart == 0) {
+                    continue;
+                }
+                reqURL = resp.HTTPResp().Request.URL;
+                aURLAndError = aid.ParseURL(lowhref);
+                aURL = aURLAndError[0];
+                if (!aURL.IsAbs()) {
+                    aURL = reqURL.ResolveReference(aURL);
+                }
+                req = aid.NewRequest(aURL.String(), "GET");
+                dataList.Push(req);
+                item = aid.NewItem({Url: aURL.String()});
+                dataList.Push(item);
             }
-
-            jsonObj = JSON.parse(bin2String(val[0]));
-            console.log(jsonObj["status"])
-
         </Script>
     </ResponseParser>
 
@@ -86,7 +105,7 @@ func TestParseJS(t *testing.T) {
 		for {
 			err := <-sched.ErrorChan()
 			if err != nil {
-				t.Log(err)
+				logger.Error(err)
 			} else {
 				break
 			}
@@ -96,7 +115,7 @@ func TestParseJS(t *testing.T) {
 		if !sched.Idle() {
 			i = 0
 		}
-		time.Sleep(100 * time.Millisecond)
+		time.Sleep(1 * time.Second)
 	}
 	sched.Stop()
 	time.Sleep(1 * time.Second)
