@@ -117,7 +117,7 @@ func appendDataList(dataList []module.Data, data module.Data, respDepth uint32) 
 	}
 	newDepth := respDepth + 1
 	if req.Depth() != newDepth {
-		req = module.NewRequest(req.HTTPReq(), newDepth)
+		req = module.NewRequest(req.HTTPReq())
 	}
 	return append(dataList, req)
 }

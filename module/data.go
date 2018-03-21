@@ -28,11 +28,15 @@ func (req *Request) SetExtra(key string, val interface{}) {
 	req.Extra[key] = val
 }
 
+func (req *Request) SetDepth(depth uint32) {
+	req.depth = depth
+}
+
 func (req *Request) Valid() bool {
 	return req.httpReq != nil && req.httpReq.URL != nil
 }
 
-func NewRequest(httpReq *http.Request, depth uint32, extras ...map[string]interface{}) *Request {
+func NewRequest(httpReq *http.Request, extras ...map[string]interface{}) *Request {
 	var extra map[string]interface{}
 	if len(extras) != 0 {
 		extra = extras[0]
@@ -41,7 +45,6 @@ func NewRequest(httpReq *http.Request, depth uint32, extras ...map[string]interf
 	}
 	return &Request{
 		httpReq: httpReq,
-		depth:   depth,
 		Extra:   extra,
 	}
 }

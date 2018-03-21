@@ -355,7 +355,7 @@ func TestSchedSendReq(t *testing.T) {
 		t.Fatalf("An error occurs when creating a HTTP request: %s (url: %s)",
 			err, url)
 	}
-	req := module.NewRequest(httpReq, 0)
+	req := module.NewRequest(httpReq)
 	// 测试URL重复的情况。
 	if !mySched.sendReq(req) {
 		t.Fatalf("Couldn't send request! (request: %#v)",

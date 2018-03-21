@@ -298,7 +298,7 @@ func genTestingRespParser(fail bool) module.ParseResponse {
 		item["index"] = index
 		item["depth"] = respDepth
 		data = append(data, item)
-		req := module.NewRequest(nil, respDepth)
+		req := module.NewRequest(nil)
 		data = append(data, req)
 		return
 	}

@@ -23,8 +23,7 @@ func TestRequest(t *testing.T) {
 	method := "GET"
 	expectedURLStr := "https://github.com/gopcp"
 	expectedHTTPReq, _ := http.NewRequest(method, expectedURLStr, nil)
-	expectedDepth := uint32(0)
-	req := NewRequest(expectedHTTPReq, expectedDepth)
+	req := NewRequest(expectedHTTPReq)
 	if req == nil {
 		t.Fatal("Couldn't create request!")
 	}
@@ -41,19 +40,15 @@ func TestRequest(t *testing.T) {
 		t.Fatalf("Inconsistent HTTP request for request: expected: %#v, actual: %#v",
 			expectedHTTPReq, req.HTTPReq())
 	}
-	if req.Depth() != expectedDepth {
-		t.Fatalf("Inconsistent depth for request: expected: %d, actual: %d",
-			expectedDepth, req.Depth())
-	}
 	expectedHTTPReq.URL = nil
-	req = NewRequest(expectedHTTPReq, expectedDepth)
+	req = NewRequest(expectedHTTPReq)
 	expectedValidity = false
 	valid = req.Valid()
 	if valid != expectedValidity {
 		t.Fatalf("Inconsistent validity for request: expected: %v, actual: %v",
 			expectedValidity, valid)
 	}
-	req = NewRequest(nil, expectedDepth)
+	req = NewRequest(nil)
 	expectedValidity = false
 	valid = req.Valid()
 	if valid != expectedValidity {

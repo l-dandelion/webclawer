@@ -323,7 +323,7 @@ func parseATag(httpResp *http.Response, respDepth uint32) ([]module.Data, []erro
 			if err != nil {
 				errs = append(errs, err)
 			} else {
-				req := module.NewRequest(httpReq, respDepth)
+				req := module.NewRequest(httpReq)
 				dataList = append(dataList, req)
 			}
 		}

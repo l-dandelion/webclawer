@@ -47,8 +47,7 @@ func TestDownload(t *testing.T) {
 		t.Fatalf("An error occurs when creating a HTTP request: %s (url: %s)",
 			err, url)
 	}
-	depth := uint32(0)
-	req := module.NewRequest(httpReq, depth)
+	req := module.NewRequest(httpReq)
 	resp, err := d.Download(req)
 	if err != nil {
 		t.Fatalf("An error occurs when downloading content: %s (req: %#v)",
@@ -57,10 +56,6 @@ func TestDownload(t *testing.T) {
 	if resp == nil {
 		t.Fatalf("Couldn't create download for request %#v!",
 			req)
-	}
-	if resp.Depth() != depth {
-		t.Fatalf("Inconsistent depth: expected: %d, actual: %d",
-			depth, resp.Depth())
 	}
 	httpResp := resp.HTTPResp()
 	if httpResp == nil {
@@ -95,12 +90,12 @@ func TestDownload(t *testing.T) {
 		t.Fatalf("An error occurs when creating a HTTP request: %s (url: %s)",
 			err, url)
 	}
-	req = module.NewRequest(httpReq, 0)
+	req = module.NewRequest(httpReq)
 	resp, err = d.Download(req)
 	if err == nil {
 		t.Fatalf("No error when download with invalid url %q!", url)
 	}
-	req = module.NewRequest(nil, 0)
+	req = module.NewRequest(nil)
 	resp, err = d.Download(req)
 	if err == nil {
 		t.Fatal("No error when download with nil HTTP request!")
@@ -139,7 +134,7 @@ func TestCount(t *testing.T) {
 		t.Fatalf("An error occurs when creating a HTTP request: %s (url: %s)",
 			err, url)
 	}
-	req := module.NewRequest(httpReq, 0)
+	req := module.NewRequest(httpReq)
 	_, err = d.Download(req)
 	if di.CalledCount() != 1 {
 		t.Fatalf("Inconsistent called count for internal module: expected: %d, actual: %d",
@@ -186,7 +181,7 @@ func TestCount(t *testing.T) {
 		t.Fatalf("An error occurs when creating a HTTP request: %s (url: %s)",
 			err, url)
 	}
-	req = module.NewRequest(httpReq, 0)
+	req = module.NewRequest(httpReq)
 	_, err = d.Download(req)
 	if di.CalledCount() != 1 {
 		t.Fatalf("Inconsistent called count for internal module: expected: %d, actual: %d",

@@ -162,7 +162,7 @@ func (sched *myScheduler) Start(initialHTTPReqs []*http.Request) (err error) {
 	sched.pick()
 	logger.Info("The Scheduler has been started.")
 	for _, httpReq := range initialHTTPReqs {
-		sched.sendReq(module.NewRequest(httpReq, 0))
+		sched.sendReq(module.NewRequest(httpReq))
 	}
 	return nil
 }
@@ -352,6 +352,7 @@ func (sched *myScheduler) analyzeOne(resp *module.Response) {
 			}
 			switch d := data.(type) {
 			case *module.Request:
+				d.SetDepth(resp.Depth() + 1)
 				sched.sendReq(d)
 			case module.Item:
 				sendItem(d, sched.itemBufferPool)
