@@ -49,5 +49,5 @@ func (downloader *myDownloader) Download(req *module.Request) (*module.Response,
 		return nil, genError(err.Error())
 	}
 	downloader.IncrCompletedCount()
-	return module.NewResponse(httpResp, req.Depth()), nil
+	return module.NewResponse(httpResp, req.Depth(), req.Extra), nil
 }
