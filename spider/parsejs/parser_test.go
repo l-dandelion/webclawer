@@ -1,7 +1,6 @@
 package parsejs
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/l-dandelion/webcrawler/module"
@@ -16,9 +15,9 @@ func TestGetPaeserFromJS(t *testing.T) {
         dataList.Push(item)
         dataList.Push(err)
     `
-	parser := getParserFromJs(jsCode)
+	parser := GetParserFromJS(jsCode)
 
-	dataList, errs := parser(nil, 0)
+	dataList, errs := parser(module.NewResponse(nil, 0))
 	if len(dataList) != 2 {
 		t.Fatalf("Incorrect length of dataList, expected: %d, actual: %d", 2, len(dataList))
 	}

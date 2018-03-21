@@ -3,11 +3,10 @@ package parsejs
 import (
 	"github.com/l-dandelion/webcrawler/module"
 	"github.com/robertkrimen/otto"
-	"net/http"
 )
 
-func getParserFromJs(jsCode string) module.ParseResponse {
-	return func(resp *http.Response, depth uint32) ([]module.Data, []error) {
+func GetParserFromJS(jsCode string) module.ParseResponse {
+	return func(resp *module.Response) ([]module.Data, []error) {
 		dataList := NewDataList()
 		errorList := NewErrorList()
 		vm := otto.New()

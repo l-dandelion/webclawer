@@ -5,7 +5,7 @@ import (
 	"github.com/robertkrimen/otto"
 )
 
-func getReqsFromJS(jsCode string) ([]*module.Request, error) {
+func GetReqsFromJS(jsCode string) ([]*module.Request, error) {
 	initialReqs := []*module.Request{}
 	dataList := NewDataList()
 	vm := otto.New()

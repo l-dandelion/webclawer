@@ -10,7 +10,7 @@ type Spider struct {
 	Name                  string
 	MaxDepth              uint32
 	AcceptedPrimaryDomain []string
-	InitialHTTPReq        []*module.Request
+	InitialReqs           []*module.Request
 	RespParsers           []module.ParseResponse
 	ItemProcessors        []module.ProcessItem
 	ReqBufferCap          uint32
@@ -30,7 +30,7 @@ func NewSpider(
 	name string,
 	maxDepth uint32,
 	acceptedPrimaryDomain []string,
-	initialHTTPReq []*module.Request,
+	InitialReqs []*module.Request,
 	RespParsers []module.ParseResponse,
 	ItemProcessors []module.ProcessItem,
 	DownloaderNumber, AnalyzerNumber, PipelineNumber uint8) *Spider {
@@ -38,7 +38,7 @@ func NewSpider(
 		Name:                  name,
 		MaxDepth:              maxDepth,
 		AcceptedPrimaryDomain: acceptedPrimaryDomain,
-		InitialHTTPReq:        initialHTTPReq,
+		InitialReqs:           InitialReqs,
 		RespParsers:           RespParsers,
 		ItemProcessors:        ItemProcessors,
 		DownloaderNumber:      DownloaderNumber,
@@ -99,7 +99,7 @@ func (sp *Spider) GenAndStartScheduler() (scheduler.Scheduler, error) {
 		return nil, err
 	}
 
-	err = sched.Start(sp.InitialHTTPReq)
+	err = sched.Start(sp.InitialReqs)
 
 	return sched, nil
 }

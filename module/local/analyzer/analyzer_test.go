@@ -260,15 +260,14 @@ var fakeHTTPRespBody = "Fake HTTP Response [%d]"
 // 生成的函数会把响应的请求URL、响应体中的索引和响应深度存在条目中。
 func genTestingRespParser(fail bool) module.ParseResponse {
 	if fail {
-		return func(httpResp *http.Response,
-			respDepth uint32) (data []module.Data, parseErrors []error) {
-			errs :=
-				[]error{fmt.Errorf("Fail! (httpResp: %#v, respDepth: %#v)", httpResp, respDepth)}
+		return func(resp *module.Response) (data []module.Data, parseErrors []error) {
+			errs := []error{fmt.Errorf("Fail! (httpResp: %#v, respDepth: %#v)", resp.HTTPResp(), resp.Depth())}
 			return nil, errs
 		}
 	}
-	return func(httpResp *http.Response,
-		respDepth uint32) (data []module.Data, parseErrors []error) {
+	return func(resp *module.Response) (data []module.Data, parseErrors []error) {
+		httpResp := resp.HTTPResp()
+		respDepth := resp.Depth()
 		data = []module.Data{}
 		parseErrors = []error{}
 		item := module.Item(map[string]interface{}{})

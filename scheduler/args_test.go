@@ -275,7 +275,8 @@ func genSimplePipelines(number int8, reuseMID bool, snGen module.SNGenertor, t *
 }
 
 // parseATag 代表一个响应解析函数的实现，只解析“A”标签。
-func parseATag(httpResp *http.Response, respDepth uint32) ([]module.Data, []error) {
+func parseATag(resp *module.Response) ([]module.Data, []error) {
+	httpResp := resp.HTTPResp()
 	//TODO: 支持更多的HTTP响应状态。
 	if httpResp.StatusCode != 200 {
 		err := fmt.Errorf(

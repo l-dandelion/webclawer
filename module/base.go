@@ -1,9 +1,5 @@
 package module
 
-import (
-	"net/http"
-)
-
 //计数
 type Counts struct {
 	CalledCount    uint64 //调用次数
@@ -42,7 +38,7 @@ type Downloader interface {
 	Download(req *Request) (*Response, error)
 }
 
-type ParseResponse func(httpResp *http.Response, respDepth uint32) ([]Data, []error)
+type ParseResponse func(resp *Response) ([]Data, []error)
 
 type Analyzer interface {
 	Module

@@ -85,6 +85,7 @@ func (resp *Response) GetText() ([]byte, error) {
 		return resp.text, nil
 	}
 	multiReader, err := reader.NewMultipleReader(resp.httpResp.Body)
+	resp.httpResp.Body = multiReader.Reader()
 	defer func() {
 		resp.httpResp.Body.Close()
 		resp.httpResp.Body = multiReader.Reader()
@@ -128,9 +129,11 @@ func (resp *Response) GetText() ([]byte, error) {
 				return resp.text, err
 			}
 		}
+
 	}
 	// 不做转码处理
 	resp.text, err = ioutil.ReadAll(resp.httpResp.Body)
+
 	return resp.text, err
 }
 

@@ -87,7 +87,7 @@ func (analyzer *myAnalyzer) Analyze(resp *module.Response) (dataList []module.Da
 	parsers := analyzer.RespParsers()
 	for _, parser := range parsers {
 		httpResp.Body = multiReader.Reader()
-		pDataList, pErrList := parser(httpResp, respDepth)
+		pDataList, pErrList := parser(resp)
 		if pDataList != nil {
 			for _, pData := range pDataList {
 				dataList = appendDataList(dataList, pData, respDepth)
